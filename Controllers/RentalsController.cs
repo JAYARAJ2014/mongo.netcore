@@ -34,11 +34,32 @@ namespace RealEstateListing.Controllers
             Context.Rentals.InsertOne(rental);
             return RedirectToAction("Index");
         }
-        public ActionResult Index() {
-
-            var rentals = Context.Rentals.Find(r=>true).ToList<Rental>();
+        public ActionResult Index()
+        {
+            var rentals = Context.Rentals.Find(r => true).ToList<Rental>();
             return View(rentals);
         }
+        private Rental GetRentalById(string id)
+        {
+            return Context.Rentals.Find<Rental>(r => r.Id == id).FirstOrDefault();
+        }
+        public ActionResult AdjustPrice(string id)
+        {
+            var rental = GetRentalById(id);
+            return View(rental);
+        }
+
+        [HttpPost]
+        public ActionResult AdjustPrice(string id, AdjustPrice adjustedPrice)
+        {
+            Rental rental = GetRentalById(id);
+            rental.AdjustPrice(adjustedPrice);
+            Context.Rentals.ReplaceOne(r=>r.Id==id, rental);
+            return RedirectToAction ("Index");
+        }
+
+
+
         // public IActionResult Index()
         // {
 

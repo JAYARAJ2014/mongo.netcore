@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
@@ -15,7 +16,7 @@ namespace RealEstateListing.Models
         public List<string> Address = new List<string>();
         public Rental()
         {
-
+            AdjustmentsHistory = new List<AdjustmentInfo>();
         }
         public Rental(PostRental postRental)
         {
@@ -23,11 +24,19 @@ namespace RealEstateListing.Models
             NumberOfRooms = postRental.NumberOfRooms;
             Price = postRental.Price;
             Address = (postRental.Address ?? string.Empty).Split('\n').ToList();
+
+            AdjustmentsHistory = new List<AdjustmentInfo>();
         }
 
         [BsonRepresentation(BsonType.Double)]
         public decimal Price { get; set; }
-
+        public List<AdjustmentInfo> AdjustmentsHistory { get; set; }
+        public void AdjustPrice(AdjustPrice adjustedPrice)
+        {
+            var adjustment = new AdjustmentInfo(adjustedPrice, Price);
+            AdjustmentsHistory.Add(adjustment);
+            Price = adjustedPrice.NewPrice;
+        }
     }
 
 

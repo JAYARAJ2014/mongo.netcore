@@ -54,10 +54,17 @@ namespace RealEstateListing.Controllers
         {
             Rental rental = GetRentalById(id);
             rental.AdjustPrice(adjustedPrice);
-            Context.Rentals.ReplaceOne(r=>r.Id==id, rental);
-            return RedirectToAction ("Index");
+            Context.Rentals.ReplaceOne(r => r.Id == id, rental);
+            return RedirectToAction("Index");
+
         }
 
+        public ActionResult Delete(string id)
+        {
+            Context.Rentals.DeleteOne(r => r.Id == id);
+            return RedirectToAction("Index");
+
+        }
 
 
         // public IActionResult Index()
